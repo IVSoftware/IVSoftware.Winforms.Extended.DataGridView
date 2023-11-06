@@ -24,8 +24,11 @@ namespace IVSoftware.Winforms.Extended
             dataGridView.DataSource = Fruits;
             var col = dataGridView.Columns["Name"];
             var index = col.Index;
+
+            // Swap out the 'normal' column for DataGridViewEnumComboBoxColumn
             dataGridView.Columns.RemoveAt(index);
             dataGridView.Columns.Insert(index, new DataGridViewEnumComboBoxColumn(col));
+
             dataGridView.Columns["Name"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             dataGridView.Columns["Color"].DefaultCellStyle.SelectionBackColor = dataGridView.BackgroundColor;
             dataGridView.Columns["Color"].Width = 80;
@@ -105,7 +108,6 @@ namespace IVSoftware.Winforms.Extended
             }
         }
         FruitName _name = 0;
-
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

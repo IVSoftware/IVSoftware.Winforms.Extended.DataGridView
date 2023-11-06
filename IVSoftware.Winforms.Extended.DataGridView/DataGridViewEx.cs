@@ -35,14 +35,25 @@ namespace IVSoftware.Winforms.Extended
                                 };
                             }
                             cbCell.EnumComboBox.Bounds = GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
+                            e.Handled = true;
                         }
                         break;
                     case nameof(Fruit.Color):
                         var fruit = ((Fruit)Rows[e.RowIndex].DataBoundItem);
                         var color = fruit.Color;
-                        using(var brush = new SolidBrush(color))
+                        int diameter = Math.Min(e.CellBounds.Width, e.CellBounds.Height) - 50;
+                        int x = e.CellBounds.X + (e.CellBounds.Width - diameter) / 2;
+                        int y = e.CellBounds.Y + (e.CellBounds.Height - diameter) / 2;
+                        e.Graphics.FillRectangle(Brushes.White, e.CellBounds);
+                        Rectangle circleBounds = new Rectangle(x, y, diameter, diameter);
+                        using (var brush = new SolidBrush(color))
                         {
-                            e.Graphics.FillRectangle(brush, e.CellBounds);
+                            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                            e.Graphics.FillEllipse(brush, circleBounds);
+                        }
+                        using (var pen = new Pen(Color.DarkSlateGray, 2)) 
+                        {
+                            e.Graphics.DrawEllipse(pen, circleBounds);
                         }
                         e.Handled = true;
                         break;
