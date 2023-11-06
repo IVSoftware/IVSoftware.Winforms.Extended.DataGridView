@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace IVSoftware.Winforms.Extended
 {
@@ -15,11 +17,18 @@ namespace IVSoftware.Winforms.Extended
                 {
                     if (cbCell.EnumComboBox.Parent is null)
                     {
-                        Controls.Add(cbCell.EnumComboBox);
+                        Controls.Add(cbCell.EnumComboBox); 
                         cbCell.EnumComboBox.SetEnumType<FruitType>();
                         cbCell.EnumComboBox.Font = DefaultCellStyle.Font;
                     }
                     cbCell.EnumComboBox.Bounds = GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
+                }
+                else
+                {
+                    switch (Columns[e.ColumnIndex].Name)
+                    {
+                    }
+
                 }
             }
         }

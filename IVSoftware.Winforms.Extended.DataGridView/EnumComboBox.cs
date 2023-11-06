@@ -41,11 +41,7 @@ namespace IVSoftware.Winforms.Extended
                 BorderStyle = BorderStyle.FixedSingle,
             };
             _label.Dock = DockStyle.Fill;
-
-            _listBoxContainer = new ListBoxContainer
-            {
-                Width = Width,
-            };
+            _listBoxContainer = new ListBoxContainer { Width = Width, };
             _listBox.SelectedIndexChanged += (sender, e) => UpdateTextBoxText();
 
             //https://symbl.cc/en/collections/arrow-symbols/
@@ -127,10 +123,11 @@ namespace IVSoftware.Winforms.Extended
             if (_listBox.SelectedIndex >= 0)
             {
                 _label.Text = _listBox.SelectedItem.ToString();
+                SelectedEnumValueChanged?.Invoke(this, new SelectedEnumValueChangedEventArgs(FruitType.Apple));
             }
-
             HideDropDown();
         }
+        public event SelectedEnumValueChangedEventHandler SelectedEnumValueChanged;
         internal void SetEnumType<T>() where T : Enum
         {
             _listBox.Items.Clear();
@@ -158,5 +155,20 @@ namespace IVSoftware.Winforms.Extended
             TransparencyKey = Color.LimeGreen;
         }
         readonly ListBox _listBox;
+    }
+
+    public delegate void SelectedEnumValueChangedEventHandler(object sender, SelectedEnumValueChangedEventArgs e);
+    public class SelectedEnumValueChangedEventArgs : EventArgs
+    {
+        public SelectedEnumValueChangedEventArgs()
+        {
+        }
+
+        public SelectedEnumValueChangedEventArgs(Enum value)
+        {
+            Value = value;
+        }
+
+        public Enum Value { get; }
     }
 }

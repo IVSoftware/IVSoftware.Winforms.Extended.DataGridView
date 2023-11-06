@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -45,12 +46,56 @@ namespace IVSoftware.Winforms.Extended
     }
     enum FruitType
     {
-        Apple,
+        [Color("Red")]
+        Apple = 1,
+
+        [Color("Orange")]
         Orange,
+
+        [Color("Yellow")]
         Banana,
     }
+
+    internal class ColorAttribute : Attribute
+    {
+        public ColorAttribute(string color)
+        {
+            if (Enum.TryParse(color, out KnownColor parsedColor))
+            {
+                Color = Color.FromKnownColor(parsedColor);
+            }
+            else
+            {
+                throw new ArgumentException($"The color '{color}' is not a known color.");
+            }
+        }
+        public Color Color { get; }
+    }
+
     class Fruit
     {
-        public FruitType Name { get; set; }
+        public Color Color
+        {
+            get
+            {
+                var fieldInfo = typeof(FruitType).GetField(Name.ToString());
+                var color = fieldInfo?.GetCustomAttribute<ColorAttribute>().Color ?? default;
+                { }
+                return color;
+            }
+        }
+        public FruitType Name
+        {
+            get => _name;
+            set
+            {
+                if (!Equals(_name, value))
+                {
+                    _name = value;
+                }
+            }
+        }
+        FruitType _name = 0;
+
     }
 }
