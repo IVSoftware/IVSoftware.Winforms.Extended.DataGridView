@@ -20,6 +20,7 @@ namespace IVSoftware.Winforms.Extended
                         Controls.Add(cbCell.EnumComboBox); 
                         cbCell.EnumComboBox.SetEnumType<FruitType>();
                         cbCell.EnumComboBox.Font = DefaultCellStyle.Font;
+                        cbCell.EnumComboBox.Cell = cbCell;
                     }
                     cbCell.EnumComboBox.Bounds = GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
                 }

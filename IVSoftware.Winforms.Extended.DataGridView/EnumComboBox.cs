@@ -60,7 +60,7 @@ namespace IVSoftware.Winforms.Extended
             _label.Click += (sender, e) => ToggleDropDown();
             icon.Click += (sender, e) => ToggleDropDown();
         }
-        public IEnumerable<string> Items
+        public IEnumerable<object> Items
         {
             get { return _listBox.Items.Cast<string>(); }
             set
@@ -69,6 +69,9 @@ namespace IVSoftware.Winforms.Extended
                 _listBox.Items.AddRange(value.ToArray());
             }
         }
+
+        public DataGridViewCell Cell { get; set; }
+
         private void ToggleDropDown()
         {
             if (_isDropDownVisible)
@@ -123,7 +126,7 @@ namespace IVSoftware.Winforms.Extended
             if (_listBox.SelectedIndex >= 0)
             {
                 _label.Text = _listBox.SelectedItem.ToString();
-                SelectedEnumValueChanged?.Invoke(this, new SelectedEnumValueChangedEventArgs(FruitType.Apple));
+                SelectedEnumValueChanged?.Invoke(this, new SelectedEnumValueChangedEventArgs((Enum)_listBox.SelectedItem));
             }
             HideDropDown();
         }
