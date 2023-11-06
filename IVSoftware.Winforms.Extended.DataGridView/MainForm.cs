@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -26,8 +27,8 @@ namespace IVSoftware.Winforms.Extended
             dataGridView.Columns.RemoveAt(index);
             dataGridView.Columns.Insert(index, new DataGridViewEnumComboBoxColumn(col));
             dataGridView.Columns["Name"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-
-            BeginInvoke((MethodInvoker)delegate { dataGridView.CurrentCell = null; });
+            dataGridView.Columns["Color"].DefaultCellStyle.SelectionBackColor = dataGridView.BackgroundColor;
+            dataGridView.Columns["Color"].Width = 80;
 
             Fruits.Add(new Fruit());
             Fruits.Add(new Fruit());
@@ -44,7 +45,7 @@ namespace IVSoftware.Winforms.Extended
             }
         }
     }
-    enum FruitType
+    enum FruitName
     {
         [Color("Red")]
         Apple = 1,
@@ -72,30 +73,39 @@ namespace IVSoftware.Winforms.Extended
         public Color Color { get; }
     }
 
-    class Fruit
+    class Fruit : INotifyPropertyChanged
     {
         public Color Color
         {
             get
             {
-                var fieldInfo = typeof(FruitType).GetField(Name.ToString());
-                var color = fieldInfo?.GetCustomAttribute<ColorAttribute>().Color ?? default;
-                { }
-                return color;
+                var fieldInfo = typeof(FruitName).GetField(Name.ToString());
+                if (fieldInfo == null)
+                {
+                    return Color.White;
+                }
+                else
+                {
+                    return fieldInfo.GetCustomAttribute<ColorAttribute>().Color;
+                }
             }
         }
-        public FruitType Name
+        public FruitName Name
         {
             get => _name;
             set
             {
                 if (!Equals(_name, value))
                 {
+                    Debug.WriteLine(value);
                     _name = value;
+                    // Notify 'Color' not 'Name'
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Color)));
                 }
             }
         }
-        FruitType _name = 0;
+        FruitName _name = 0;
 
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

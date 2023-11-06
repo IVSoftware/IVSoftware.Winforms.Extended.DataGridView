@@ -26,6 +26,19 @@ namespace IVSoftware.Winforms.Extended
             icon.Location = new Point(Width - Height, 0);
             icon.Size = new Size(Height, Height);
         }
+        protected override void OnParentChanged(EventArgs e)
+        {
+            base.OnParentChanged(e);
+            if(Parent != null)
+            {
+                Control form = this.Parent;
+                while (form?.Parent != null)
+                {
+                    form = form.Parent;
+                }
+                form.Move += (sender, e) => UpdateDropDownLocation();
+            }
+        }
         protected override void OnFontChanged(EventArgs e)
         {
             base.OnFontChanged(e);
@@ -70,7 +83,7 @@ namespace IVSoftware.Winforms.Extended
             }
         }
 
-        public DataGridViewCell Cell { get; set; }
+        internal EnumComboBoxExCell Cell { get; set; }
 
         private void ToggleDropDown()
         {
@@ -85,11 +98,9 @@ namespace IVSoftware.Winforms.Extended
         }
         private void ShowDropDown()
         {
-            var screen = RectangleToScreen(ClientRectangle);
+            UpdateDropDownLocation();
             _listBoxContainer.Height = localMeasureItems();
             _isDropDownVisible = true;
-            _listBoxContainer.Top = screen.Bottom;
-            _listBoxContainer.Left = screen.Left;
             _listBoxContainer.Width = Width;
             _listBoxContainer.Show(this);
             _listBoxContainer.TopMost = true;
@@ -115,6 +126,12 @@ namespace IVSoftware.Winforms.Extended
                     return totalHeight;
                 }
             }
+        }
+        private void UpdateDropDownLocation()
+        {
+            var screen = RectangleToScreen(ClientRectangle);
+            _listBoxContainer.Top = screen.Bottom;
+            _listBoxContainer.Left = screen.Left;
         }
         private void HideDropDown()
         {
