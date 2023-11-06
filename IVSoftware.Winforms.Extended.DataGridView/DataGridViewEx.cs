@@ -22,12 +22,12 @@ namespace IVSoftware.Winforms.Extended
                             if (cbCell.EnumComboBox.Parent is null)
                             {
                                 Controls.Add(cbCell.EnumComboBox); 
-                                // Probably want to switch(Columns[e.ColumnIndex
                                 cbCell.EnumComboBox.SetEnumType<FruitName>();
                                 cbCell.EnumComboBox.Font = DefaultCellStyle.Font;
                                 cbCell.EnumComboBox.Cell = cbCell;
                                 cbCell.EnumComboBox.SelectedEnumValueChanged += (sender, e) =>
                                 {
+                                    // Bind the combo box back to the data item.
                                     if(sender is EnumComboBox enumComboBox)
                                     {
                                         ((Fruit)Rows[enumComboBox.Cell.RowIndex].DataBoundItem).Name = (FruitName)e.Value;
